@@ -1,0 +1,49 @@
+import React, {Component} from 'react';
+import {AppRegistry, Text, View, StyleSheet, Image} from 'react-native';
+import {name as appName} from '../app.json';
+import one from './fixtures/images/1.png';
+import two from './fixtures/images/2.png';
+import three from './fixtures/images/3.png';
+import four from './fixtures/images/1.png';
+
+export default class App extends Component {
+  state = {
+    loading: false,
+    text: null,
+  };
+
+  async componentDidMount() {
+    console.log('loading component');
+    this.setState({loading: true});
+    import('./fixtures/dyn').then(a => {
+      setTimeout(() => {
+        this.setState({loading: false, text: a.default});
+      }, 1000);
+    });
+  }
+
+  render() {
+    const {loading, text} = this.state;
+    return (
+      <View style={styles.container}>
+        <Text>
+          loading: {String(loading)} text: {text || ''}
+          <Image source={one} />
+          <Image source={two} />
+          <Image source={four} />
+        </Text>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+});
+
+AppRegistry.registerComponent(appName, () => App);
